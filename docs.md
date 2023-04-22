@@ -193,3 +193,109 @@ The moment of truth, upload the changes to Github
 git push origin <branch>
 ```
 where **branch** is the name of the current branch or the branch you want to upload the changes, in this case, the branch is <span class="rose">main<span>
+
+## <span class="rose">That's all</span>
+if everything was well, check your Github repository and you'll have the latest commit there.
+
+
+## <span class="white center">Deploying to Render.com</span>
+[Documentation here](https://render.com/docs/deploy-django#update-your-app-for-render)
+
+## <span class="rose">Set the secret key</span>
+Go to settings.py and add:
+```
+
+import os
+
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+```
+## <span class="rose">Turn off DEBUG if is in production</span>
+Always in settings.py
+```
+DEBUG = 'RENDER' not in os.environ
+```
+## <span class="rose">Add the ALLOWED_HOST</span>
+```
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:    
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+```
+## <span class="rose">Install the package to add PostgreSQL database</span>
+In the CLI:
+```
+pip install dj-database-url psycopg2-binary
+```
+
+## <span class="rose">Import the package in settings.py</span>
+```
+import dj_database_url
+```
+## <span class="rose">Add DATABASE config</span>
+```
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',        
+        conn_max_age=600    )
+    }
+```
+
+## <span class="rose">Install whitenoise</span>
+In the CLI:
+```
+pip install whitenoise[brotli]
+```
+## <span class="rose">Add the whitenoise middleware</span>
+In settings.py, add the middleware after SecurityMiddleware
+```
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',    ...
+]
+```
+## <span class="rose">Add the settings to the static files</span>
+In settings.py
+```
+STATIC_URL = '/static/'
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+```
+## <span class="rose">Freeze the modules to install</span>
+```
+pip freeze > requirements.txt
+```
+
+
+## <span class="rose">Create build.sh file</span>
+```
+touch build.sh
+```
+
+## <span class="rose">Add the necessary scripts to run</span>
+
+```
+#!/usr/bin/env bash
+# exit on error
+
+set -o errexit
+
+pip install -r requirements.txt
+
+python manage.py collectstatic --no-input
+python manage.py migrate
+```
+
+
+## <span class="rose">Give permissions to the build.sh</span>
+In the bash command line:
+```
+chmod a+x build.hs
+```
+## <span class="rose">Install gunicorn</span>
+In the bash command line:
+```
+pip install gunicorn
+```
