@@ -1,6 +1,6 @@
 <style>
     body {
-        color: #d8c4c4;
+        color: #bebebe;
     }
     .blue {
         color: #1e8a9b;
@@ -182,7 +182,44 @@ urlpatterns = [
 ```
 Depending of the app name and the views and urls you want for the app
 ## <span class="rose">Run again the project</span>
+```
+python manage.py runserver
+```
 And you will see how you have now routes for each app, and the routes are well distribuited.
+
+## <span class="white center">Start to add models to the db</span>
+## <span class="rose">Add a single model</span>
+To add a model in Django, we have the models.py file inside each app, and we have prebuild models as the User model. Now we will add a new model to the blog app:
+```
+from django.contrib.auth.models import User
+# Create your models here.
+
+class Post(models.Model):
+    title = models.CharField(max_length=100, default=None)
+    url = models.CharField(max_length=200, default=None, null=True, blank=True)
+    text = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now_add=True, editable=True)
+    status = models.CharField(max_length=9, choices=TRIVIA_STATUS, default=DRAFT)
+    
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        super(Post, self).save(*args, **kwargs)
+
+```
+## <span class="rose">After adding a model, is needed to migrate</span>
+First run the command:
+```
+python manage.py makemigrations
+```
+Maybe an action will be required depending of the changes or errors.
+Later, run the migrations:
+```
+python manage.py migrate
+```
 
 ## <span class="white center">Saving the project in a Github repository</span>
 ## <span class="rose">Init the git repository</span>
@@ -300,6 +337,12 @@ if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ```
+## <span class="rose">Install gunicorn</span>
+In the bash command line:
+```
+pip install gunicorn
+```
+
 ## <span class="rose">Freeze the modules to install</span>
 ```
 pip freeze > requirements.txt
@@ -331,8 +374,18 @@ In the bash command line:
 ```
 chmod a+x build.hs
 ```
-## <span class="rose">Install gunicorn</span>
-In the bash command line:
-```
-pip install gunicorn
-```
+
+## <span class="rose">Deployment config</span>
+In Render.com, when you are deploying, add the necessary configuration
+- **.env variables**
+  ```
+  PYTHON_VERSION=
+  DATABASE_URL=
+  SECRET_KEY=
+  RENDER*
+  ```
+  * *RENDER is added automatically by Render.
+- Build command:
+  ```
+  ./build.sh
+  ```
