@@ -146,6 +146,43 @@ We are importing the view, and adding a new path in the urlpatterns. The path re
 Now go to <span class="rose">localhost:8000/hello/</span> and see the magic.
 
 ## <span class="rose">Refactoring to be pro</span>
+To be a pro, one of the possible things to do is import the urls from each app and assign a routes for each one.
+In this case, we will to to that.
+First, in project.urls, add:
+```
+from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
+
+
+apps = [
+    ('auth/', 'api.authenticate.urls', 'auth'),
+]
+
+urlpatterns_apps = [path(url, include(urlconf, namespace=namespace)) for url, urlconf, namespace in apps]
+
+urlpatterns_django = [
+    path('admin/', admin.site.urls),
+]
+
+urlpatterns_static = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns = (urlpatterns_apps + urlpatterns_django + urlpatterns_static)
+```
+and in each app.urls add:
+```
+from django.urls import path
+from .views import say_hello_world
+
+app_name = 'finetuning'
+
+urlpatterns = [
+    path('hello/', say_hello_world, name='hello'),
+]
+```
+Depending of the app name and the views and urls you want for the app
+## <span class="rose">Run again the project</span>
+And you will see how you have now routes for each app, and the routes are well distribuited.
 
 ## <span class="white center">Saving the project in a Github repository</span>
 ## <span class="rose">Init the git repository</span>

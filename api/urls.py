@@ -15,9 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from .authenticate.views import say_hello_world
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('hello/', say_hello_world, name="Hello")
+from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
+
+
+apps = [
+    ('auth/', 'api.authenticate.urls', 'auth'),
 ]
+
+urlpatterns_apps = [path(url, include(urlconf, namespace=namespace)) for url, urlconf, namespace in apps]
+
+urlpatterns_django = [
+    path('admin/', admin.site.urls),
+]
+
+urlpatterns_static = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns = (urlpatterns_apps + urlpatterns_django + urlpatterns_static)
