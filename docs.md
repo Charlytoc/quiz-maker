@@ -47,13 +47,19 @@ To initialize a new virtual environment in Python, go to the directory previusly
 py -m venv venv  
 ```
 A new directory called venv will be created in the directory.
+
 ***
 ## <span class="rose">**Get inside the venv**</span>
 To get inside the venv you need to run another command, this command will ensure you're installing all modules inside the environment
-```
-venv\Scripts\activate
-```
-Run it in Powershell
+- FOR POWERSHELL
+    ```
+    venv\Scripts\activate
+    ```
+- FOR BASH
+    ```
+    source ./venv/Scripts/activate
+    ```
+Also if you're in Visual Studio Code you can press F1 and search for <span class="rose">Python: Select interpreter </span>, and then select the virtual environment and open a new terminal. You must see something called venv in the terminal, this indicated you're in the virtual environment.
 ## <span class="rose">**Install Django**</span>
 To install Django it is as simple as run a command in the current directory
 ```

@@ -42,9 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api.authenticate',
-    'api.schedule',
-    'api.aitools',
-    'api.blog'
 ]
 
 MIDDLEWARE = [
