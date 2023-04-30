@@ -22,6 +22,7 @@ from django.conf import settings
 
 apps = [
     ('auth/', 'api.authenticate.urls', 'auth'),
+    ('ai/', 'api.aitools.urls', 'aitools'),
 ]
 
 urlpatterns_apps = [path(url, include(urlconf, namespace=namespace)) for url, urlconf, namespace in apps]
