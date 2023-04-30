@@ -372,7 +372,7 @@ python manage.py migrate
 ## <span class="rose">Give permissions to the build.sh</span>
 In the bash command line:
 ```
-chmod a+x build.hs
+chmod a+x build.sh
 ```
 
 ## <span class="rose">Deployment config</span>
@@ -382,6 +382,7 @@ In Render.com, when you are deploying, add the necessary configuration
   PYTHON_VERSION=
   DATABASE_URL=
   SECRET_KEY=
+  EXTERNAL_HOSTNAME=
   RENDER*
   ```
   * *RENDER is added automatically by Render.
